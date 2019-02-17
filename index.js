@@ -385,14 +385,28 @@ Daikin.prototype = {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
 		http.get("http://192.168.1.237/aircon/get_control_info", function(res) {
-			//console.log(res);
+			const { statusCode } = res;
+  			const contentType = res.headers['content-type'];
+
+  			let error;
+  			if (statusCode !== 200) {
+    				error = new Error('Request Failed.\n' +
+						  `Status Code: ${statusCode}`);
+  			}
+			if (error) {
+    				console.error(error.message);
+    				// consume response data to free up memory
+    				res.resume();
+    				return;
+  			}
 			res.setEncoding('utf8');
 			let rawData = '';
 			res.on('data', (chunk) => { rawData += chunk; });
 			res.on('end', () => {
 			  try {
-			    const parsedData = JSON.parse(rawData);
-			    console.log(parsedData);
+			    var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
+				this.log("Your Model is: " + json.model);	  
+			    console.log(json);
 			  } catch (e) {
 			  console.error(e.message);
 			} 
