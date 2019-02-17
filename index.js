@@ -383,8 +383,8 @@ Daikin.prototype = {
 	getModelInfo: function() {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
-		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
-			if (!err && response.statusCode == 200) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(error, response, body) {
+			if (!error && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.log("Your Model is: " + json.model);
@@ -395,7 +395,7 @@ Daikin.prototype = {
 				} // Doesn't yet override original value, working on that later
 				
 			} else {
-				this.log("Error getting model info: %s", err);
+				this.log("Error getting model info: %s", error);
 			}
 		}.bind(this));
 		
