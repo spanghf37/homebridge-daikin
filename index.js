@@ -112,7 +112,7 @@ Daikin.prototype = {
 	// Required
 	getCurrentHeatingCoolingState: function(callback) {
 		this.log("getCurrentHeatingCoolingState from:", this.apiroute+"/aircon/get_control_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
@@ -172,7 +172,7 @@ Daikin.prototype = {
 	},
 	getCurrentTemperature: function(callback) {
 		this.log("getCurrentTemperature from:", this.apiroute+"/aircon/get_sensor_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"ret":"OK","htemp":"24.0","hhum""-","otemp":"-","err":"0","cmpfreq":"0"}
@@ -187,7 +187,7 @@ Daikin.prototype = {
 	},
 	getTargetTemperature: function(callback) {
 		this.log("getTargetTemperature from:", this.apiroute+"/aircon/get_control_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"state":"OFF","stateCode":5,"temperature":"18.10","humidity":"34.10"}
@@ -222,7 +222,7 @@ Daikin.prototype = {
 	/*
 	getCurrentRelativeHumidity: function(callback) {
 		this.log("getCurrentRelativeHumidity from:", this.apiroute+"/aircon/get_control_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(body); //{"state":"OFF","stateCode":5,"temperature":"18.10","humidity":"34.10"}
@@ -368,7 +368,7 @@ Daikin.prototype = {
 		
 		// Finally, we send the command
 		this.log("setDaikinMode: setting pow to " + pow + ", mode to " + mode + " and stemp to " + sTemp);
-		axios.get("http://192.168.1.237/aircon/get_control_info" + pow + mode + sTemp + "&shum=0", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info" + pow + mode + sTemp + "&shum=0").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				result = null; // success
@@ -383,7 +383,7 @@ Daikin.prototype = {
 	getModelInfo: function() {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
-		axios.get("http://192.168.1.237/aircon/get_control_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
@@ -399,7 +399,7 @@ Daikin.prototype = {
 			}
 		}.bind(this));
 		
-		axios.get("http://192.168.1.237/aircon/common/basic_info", function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/common/basic_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
