@@ -176,7 +176,7 @@ Daikin.prototype = {
 	getCurrentTemperature: function(callback) {
 		this.log("getCurrentTemperature from:", this.apiroute+"/aircon/get_sensor_info");
 		axios.get({
-			url: this.apiroute+"/aircon/get_sensor_info"
+			url: "http://192.168.1.237/aircon/get_control_info" 
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -193,7 +193,7 @@ Daikin.prototype = {
 	getTargetTemperature: function(callback) {
 		this.log("getTargetTemperature from:", this.apiroute+"/aircon/get_control_info");
 		axios.get({
-			url: this.apiroute+"/aircon/get_control_info"
+			url: "http://192.168.1.237/aircon/get_control_info" 
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -230,7 +230,7 @@ Daikin.prototype = {
 	getCurrentRelativeHumidity: function(callback) {
 		this.log("getCurrentRelativeHumidity from:", this.apiroute+"/aircon/get_control_info");
 		axios.get({
-					url: this.apiroute+"/aircon/get_control_info"
+					url: "http://192.168.1.237/aircon/get_control_info" 
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -378,7 +378,7 @@ Daikin.prototype = {
 		// Finally, we send the command
 		this.log("setDaikinMode: setting pow to " + pow + ", mode to " + mode + " and stemp to " + sTemp);
 		axios.get({
-			url: this.apiroute + "/aircon/set_control_info" + pow + mode + sTemp + "&shum=0"
+			url: "http://192.168.1.237/aircon/get_control_info" + pow + mode + sTemp + "&shum=0"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -395,7 +395,7 @@ Daikin.prototype = {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
 		axios.get({
-			url: this.apiroute+"/aircon/get_model_info"
+			url: "http://192.168.1.237/aircon/get_control_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -413,7 +413,7 @@ Daikin.prototype = {
 		}.bind(this));
 		
 		axios.get({
-			url: this.apiroute+"/common/basic_info"
+			url: "http://192.168.1.237/aircon/common/basic_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
