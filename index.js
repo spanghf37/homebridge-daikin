@@ -395,7 +395,7 @@ Daikin.prototype = {
 			    console.log(parsedData);
 			  } catch (e) {
 			  console.error(e.message);
-			}
+			} 
 			});
 			//if (!err && response.statusCode == 200) {
 			//	this.log("response success");
