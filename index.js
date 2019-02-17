@@ -383,7 +383,8 @@ Daikin.prototype = {
 	getModelInfo: function() {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
-		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(error, response, body) {
+		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(response) {
+			console.log(response);
 			if (!error && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
