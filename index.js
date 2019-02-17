@@ -386,6 +386,17 @@ Daikin.prototype = {
 		// file, the Name and Model as well
 		http.get("http://192.168.1.237/aircon/get_control_info", function(response) {
 			console.log(response);
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+			  try {
+			    const parsedData = JSON.parse(rawData);
+			    console.log(parsedData);
+			  } catch (e) {
+			  console.error(e.message);
+			}
+			});
 			//if (!err && response.statusCode == 200) {
 			//	this.log("response success");
 			//	var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
@@ -398,7 +409,7 @@ Daikin.prototype = {
 				
 			//} else {
 			//	this.log("Error getting model info: %s", err);
-			}
+			//}
 		}.bind(this));
 		
 		axios.get("http://192.168.1.237/aircon/common/basic_info").then(function(err, response, body) {
