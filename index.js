@@ -404,7 +404,7 @@ Daikin.prototype = {
 			res.on('data', (chunk) => { rawData += chunk; });
 			res.on('end', () => {
 			  try {
-			    var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
+			    var json = JSON.parse(convertDaikinToJSON(rawData)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.log("Your Model is: " + json.model);	  
 			    console.log(json);
 			  } catch (e) {
