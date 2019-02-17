@@ -22,6 +22,7 @@
 
 var Service, Characteristic;
 var request = require("request");
+var axios = require("axios");
 
 module.exports = function(homebridge){
   Service = homebridge.hap.Service;
@@ -89,7 +90,7 @@ function replaceAll(str, find, replace) {
 
 Daikin.prototype = {
 	httpRequest: function(url, body, method, username, password, sendimmediately, callback) {
-		request({
+		axios({
 				url: url,
 				body: body,
 				method: method,
@@ -111,8 +112,9 @@ Daikin.prototype = {
 	// Required
 	getCurrentHeatingCoolingState: function(callback) {
 		this.log("getCurrentHeatingCoolingState from:", this.apiroute+"/aircon/get_control_info");
-		request.get({
-			url: this.apiroute+"/aircon/get_control_info"
+		axios.get({
+			url: "http://192.168.1.237/aircon/get_control_info" 
+			//this.apiroute+"/aircon/get_control_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -173,7 +175,7 @@ Daikin.prototype = {
 	},
 	getCurrentTemperature: function(callback) {
 		this.log("getCurrentTemperature from:", this.apiroute+"/aircon/get_sensor_info");
-		request.get({
+		axios.get({
 			url: this.apiroute+"/aircon/get_sensor_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
@@ -190,7 +192,7 @@ Daikin.prototype = {
 	},
 	getTargetTemperature: function(callback) {
 		this.log("getTargetTemperature from:", this.apiroute+"/aircon/get_control_info");
-		request.get({
+		axios.get({
 			url: this.apiroute+"/aircon/get_control_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
@@ -227,7 +229,7 @@ Daikin.prototype = {
 	/*
 	getCurrentRelativeHumidity: function(callback) {
 		this.log("getCurrentRelativeHumidity from:", this.apiroute+"/aircon/get_control_info");
-		request.get({
+		axios.get({
 					url: this.apiroute+"/aircon/get_control_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
@@ -375,7 +377,7 @@ Daikin.prototype = {
 		
 		// Finally, we send the command
 		this.log("setDaikinMode: setting pow to " + pow + ", mode to " + mode + " and stemp to " + sTemp);
-		request.get({
+		axios.get({
 			url: this.apiroute + "/aircon/set_control_info" + pow + mode + sTemp + "&shum=0"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
@@ -392,7 +394,7 @@ Daikin.prototype = {
 	getModelInfo: function() {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
-		request.get({
+		axios.get({
 			url: this.apiroute+"/aircon/get_model_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
@@ -410,7 +412,7 @@ Daikin.prototype = {
 			}
 		}.bind(this));
 		
-		request.get({
+		axios.get({
 			url: this.apiroute+"/common/basic_info"
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
