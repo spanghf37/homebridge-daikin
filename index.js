@@ -384,24 +384,24 @@ Daikin.prototype = {
 	getModelInfo: function() {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
-		http.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
+		http.get("http://192.168.1.237/aircon/get_control_info", function(response) {
 			console.log(response);
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
-				this.log("Your Model is: " + json.model);
+			//if (!err && response.statusCode == 200) {
+			//	this.log("response success");
+			//	var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
+			//	this.log("Your Model is: " + json.model);
 				
-				if (this.model == "HTTP Model" /*& json.model != "NOTSUPPORT"*/) {
-					this.model = json.model;
+			//	if (this.model == "HTTP Model" /*& json.model != "NOTSUPPORT"*/) {
+			//		this.model = json.model;
 					// this.log("Model: " + json.model + ", " + this.model);
 				} // Doesn't yet override original value, working on that later
 				
-			} else {
-				this.log("Error getting model info: %s", err);
+			//} else {
+			//	this.log("Error getting model info: %s", err);
 			}
 		}.bind(this));
 		
-		http.get("http://192.168.1.237/aircon/common/basic_info").then(function(err, response, body) {
+		axios.get("http://192.168.1.237/aircon/common/basic_info").then(function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
