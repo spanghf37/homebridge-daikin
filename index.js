@@ -421,7 +421,7 @@ Daikin.prototype = {
 					// this.log("Model: " + json.model + ", " + this.model);
 				//} // Doesn't yet override original value, working on that later
 				
-			//} else {
+			//} else { 
 			//	this.log("Error getting model info: %s", err);
 			//}
 		}.bind(this));
