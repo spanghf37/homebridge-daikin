@@ -189,32 +189,66 @@ Daikin.prototype = {
 	},
 	getCurrentTemperature: function(callback) {
 		this.log("getCurrentTemperature from:", this.apiroute+"/aircon/get_sensor_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				var json = JSON.parse(convertDaikinToJSON(body)); //{"ret":"OK","htemp":"24.0","hhum""-","otemp":"-","err":"0","cmpfreq":"0"}
+		http.get(this.apiroute+"/aircon/get_sensor_info", function(res) {
+			const { statusCode } = res;
+  			const contentType = res.headers['content-type'];
+
+  			let error;
+  			if (statusCode !== 200) {
+    				error = new Error('Request Failed.\n' +
+						  `Status Code: ${statusCode}`);
+  			}
+			if (error) {
+    				console.error(error.message);
+    				// consume response data to free up memory
+    				res.resume();
+    				return;
+  			}
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+			  try {
+			    var json = JSON.parse(convertDaikinToJSON(rawData)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.log("Daikin mode is %s, currently %s degrees", this.currentHeatingCoolingState, json.htemp);
 				this.temperature = parseFloat(json.htemp);
 				callback(null, this.temperature); // success
-			} else {
-				this.log("Error getting state: %s", err);
-				callback(err);
-			}
+			  } catch (e) {
+			  console.error(e.message);
+			} 
+			});				
 		}.bind(this));
 	},
 	getTargetTemperature: function(callback) {
 		this.log("getTargetTemperature from:", this.apiroute+"/aircon/get_control_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				var json = JSON.parse(convertDaikinToJSON(body)); //{"state":"OFF","stateCode":5,"temperature":"18.10","humidity":"34.10"}
+		http.get(this.apiroute+"/aircon/get_control_info", function(res) {
+			const { statusCode } = res;
+  			const contentType = res.headers['content-type'];
+
+  			let error;
+  			if (statusCode !== 200) {
+    				error = new Error('Request Failed.\n' +
+						  `Status Code: ${statusCode}`);
+  			}
+			if (error) {
+    				console.error(error.message);
+    				// consume response data to free up memory
+    				res.resume();
+    				return;
+  			}
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+			  try {
+			    var json = JSON.parse(convertDaikinToJSON(rawData)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.targetTemperature = parseFloat(json.stemp);
 				this.log("Target temperature is %s", this.targetTemperature);
 				callback(null, this.targetTemperature); // success
-			} else {
-				this.log("Error getting state: %s", err);
-				callback(err);
-			}
+			  } catch (e) {
+			  console.error(e.message);
+			} 
+			});				
 		}.bind(this));
 	},
 	setTargetTemperature: function(value, callback) {
@@ -385,14 +419,30 @@ Daikin.prototype = {
 		
 		// Finally, we send the command
 		this.log("setDaikinMode: setting pow to " + pow + ", mode to " + mode + " and stemp to " + sTemp);
-		axios.get("http://192.168.1.237/aircon/get_control_info" + pow + mode + sTemp + "&shum=0").then(function(err, response, body) {
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				result = null; // success
-			} else {
-				this.log("Error getting state: %s", err);
-				result = err;
-			}
+		http.get(this.apiroute + "/aircon/set_control_info" + pow + mode + sTemp + "&shum=0", function(res) {
+			const { statusCode } = res;
+  			const contentType = res.headers['content-type'];
+
+  			let error;
+  			if (statusCode !== 200) {
+    				error = new Error('Request Failed.\n' +
+						  `Status Code: ${statusCode}`);
+  			}
+			if (error) {
+    				console.error(error.message);
+    				// consume response data to free up memory
+    				res.resume();
+    				return;
+  			}
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+			  try {
+			  } catch (e) {
+			  console.error(e.message);
+			} 
+			});						
 		}.bind(this));
 		return result;
 	},
