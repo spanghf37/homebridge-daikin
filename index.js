@@ -22,7 +22,6 @@
 
 var Service, Characteristic;
 var request = require("request");
-var axios = require("axios");
 var http = require("http");
 
 module.exports = function(homebridge){
@@ -91,7 +90,7 @@ function replaceAll(str, find, replace) {
 
 Daikin.prototype = {
 	httpRequest: function(url, body, method, username, password, sendimmediately, callback) {
-		axios({
+		request({
 				url: url,
 				body: body,
 				method: method,
@@ -113,10 +112,27 @@ Daikin.prototype = {
 	// Required
 	getCurrentHeatingCoolingState: function(callback) {
 		this.log("getCurrentHeatingCoolingState from:", this.apiroute+"/aircon/get_control_info");
-		axios.get("http://192.168.1.237/aircon/get_control_info").then(function(err, response, body) {
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
+		http.get(this.apiroute+"/aircon/get_control_info", function(res) {
+			const { statusCode } = res;
+  			const contentType = res.headers['content-type'];
+
+  			let error;
+  			if (statusCode !== 200) {
+    				error = new Error('Request Failed.\n' +
+						  `Status Code: ${statusCode}`);
+  			}
+			if (error) {
+    				console.error(error.message);
+    				// consume response data to free up memory
+    				res.resume();
+    				return;
+  			}
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+			  try {
+			    	var json = JSON.parse(convertDaikinToJSON(rawData)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.log("Heating state is %s", json.mode);
 				if (json.pow == "0"){
 					// The Daikin is off
@@ -154,10 +170,10 @@ Daikin.prototype = {
 					}
 				}
 				callback(null, this.state); // success
-			} else {
-				this.log("Error getting state: %s", err);
-				callback(err);
-			}
+			  } catch (e) {
+			  console.error(e.message);
+			} 
+			});						
 		}.bind(this));
 	},
 	getTargetHeatingCoolingState: function(callback) {
